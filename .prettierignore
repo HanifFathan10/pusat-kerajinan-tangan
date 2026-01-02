@@ -1,0 +1,22 @@
+# Dependencies
+node_modules/
+vendor/
+
+# Laravel/System files
+.env
+.phpunit.result.cache
+storage/
+bootstrap/cache/
+
+# Compiled assets
+public/css/
+public/js/
+public/build/
+mix-manifest.json
+package-lock.json
+
+# Git and OS files
+.git/
+.svn/
+.hg/
+.DS_Store
