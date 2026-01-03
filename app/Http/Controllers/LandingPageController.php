@@ -12,9 +12,33 @@ use Illuminate\Support\Facades\Log;
 
 class LandingPageController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $produks = Produk::where('is_active', 1)->get();
+        $query = Produk::query()->where('is_active', 1);
+
+        if ($request->has('search')) {
+            $query->where('nama_produk', 'like', '%' . $request->search . '%');
+        }
+
+        if ($request->has('ready_stock')) {
+            $query->where('stok_produk', '>', 0);
+        }
+
+        if ($request->has('min_price')) {
+            $query->where('harga', '>=', $request->min_price);
+        }
+        if ($request->has('max_price')) {
+            $query->where('harga', '<=', $request->max_price);
+        }
+
+        match ($request->sort) {
+            'harga_asc' => $query->orderBy('harga', 'asc'),
+            'harga_desc' => $query->orderBy('harga', 'desc'),
+            default => $query->latest(),
+        };
+
+        $produks = $query->paginate(9)->withQueryString();
+
         $cart = session()->get('cart', []);
         $total = array_reduce($cart, function ($carry, $item) {
             return $carry + ($item['price'] * $item['quantity']);
@@ -139,7 +163,6 @@ class LandingPageController extends Controller
                     'catatan'           => $cart['catatan'] ?? null,
                 ]);
 
-                // 5. Simpan Detail Penjualan & Kurangi Stok
                 foreach ($cart as $id => $details) {
                     $produk = Produk::lockForUpdate()->find($id);
 
@@ -152,7 +175,6 @@ class LandingPageController extends Controller
                             'sub_total'    => $details['price'] * $details['quantity']
                         ]);
 
-                        // Kurangi Stok
                         $produk->decrement('stok_produk', $details['quantity']);
                     } else {
                         throw new \Exception("Stok produk {$details['name']} tidak mencukupi.");
@@ -161,7 +183,6 @@ class LandingPageController extends Controller
 
                 session()->forget('cart');
 
-                // Redirect ke halaman sukses/konfirmasi pembayaran
                 return redirect()->route('landing.success', $penjualan->id)
                     ->with('success', 'Pesanan berhasil dibuat!');
             });

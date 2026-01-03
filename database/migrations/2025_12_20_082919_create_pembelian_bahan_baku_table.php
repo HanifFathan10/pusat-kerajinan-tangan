@@ -14,12 +14,11 @@ return new class extends Migration
         Schema::create('pembelian_bahan_baku', function (Blueprint $table) {
             $table->id();
             $table->date('tanggal_beli');
-            $table->string('supplier')->nullable(); // Nama Toko/Supplier
+            $table->string('supplier')->nullable();
             $table->decimal('total_biaya', 15, 2)->default(0);
             $table->timestamps();
         });
 
-        // Tabel Detail (Pivot) agar satu nota bisa beli banyak bahan
         Schema::create('detail_pembelian_bahan', function (Blueprint $table) {
             $table->id();
             $table->foreignId('pembelian_bahan_baku_id')->constrained('pembelian_bahan_baku')->cascadeOnDelete();

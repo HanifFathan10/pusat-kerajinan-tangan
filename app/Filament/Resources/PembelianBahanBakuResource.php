@@ -4,8 +4,6 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\PembelianBahanBakuResource\Pages;
 use App\Models\PembelianBahanBaku;
-use Filament\Actions\Action;
-use Filament\Actions\EditAction;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Repeater;
@@ -18,7 +16,10 @@ use Filament\Forms\Set;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Actions\Action;
+use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
+use Illuminate\Support\Facades\DB;
 
 class PembelianBahanBakuResource extends Resource
 {
@@ -44,6 +45,8 @@ class PembelianBahanBakuResource extends Resource
                     ])->columns(2),
 
                 Section::make('Item Belanja')
+                    ->description('Daftar material yang dibeli dari supplier.')
+                    ->disabled(fn(?PembelianBahanBaku $record) => $record?->status === 'diterima')
                     ->schema([
                         Repeater::make('detailPembelian')
                             ->relationship()
@@ -145,17 +148,23 @@ class PembelianBahanBakuResource extends Resource
                     ->icon('heroicon-m-arrow-down-tray')
                     ->color('success')
                     ->requiresConfirmation()
-                    ->hidden(fn(PembelianBahanBaku $record) => $record->status === 'diterima')
+                    ->hidden(fn(PembelianBahanBaku $record) => str_contains($record->supplier, '(DITERIMA)'))
                     ->action(function (PembelianBahanBaku $record) {
-                        foreach ($record->detailPembelian as $detail) {
-                            $detail->bahanBaku->increment('stok', $detail->jumlah_beli);
-                        }
-                        $record->update(['status' => 'diterima']);
+                        DB::transaction(function () use ($record) {
+                            foreach ($record->detailPembelian as $detail) {
+                                $detail->bahanBaku->increment('stok', $detail->jumlah_beli);
+                            }
+
+                            $record->update([
+                                'supplier' => $record->supplier . ' (DITERIMA)'
+                            ]);
+                        });
+
                         Notification::make()
-                            ->title('Stok Bertambah')
+                            ->title('Stok Berhasil Masuk')
                             ->success()
                             ->send();
-                    })
+                    }),
             ]);
     }
 

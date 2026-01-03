@@ -132,7 +132,6 @@
 
 @push('scripts')
     <script>
-        // Pastikan variabel cartCount bisa diakses secara global di dalam script
         const getCartCountElement = () => document.getElementById('cart-count');
 
         async function addToCart(productId) {
@@ -152,51 +151,66 @@
 
                 if (data.status === 'success') {
                     if (getCartCountElement()) getCartCountElement().innerText = data.cart_count;
-                    alert(data.message);
-                    window.location.reload();
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                alert('Gagal menambahkan produk.');
-            }
-        }
 
-        // PERBAIKAN UTAMA: Definisi fungsi removeFromCart yang benar
-        async function removeFromCart(productId) {
-            try {
-                const response = await fetch("{{ route('remove.from.cart') }}", { // Tambahkan tanda kutip di route
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        id: productId
-                    })
-                });
-
-                const data = await response.json();
-
-                if (data.status === 'success') {
-                    if (getCartCountElement()) getCartCountElement().innerText = data.cart_count;
-                    alert(data.message);
-                    window.location.reload();
-                }
-            } catch (error) {
-                console.error('Error removing item from cart:', error);
-                alert('Gagal menghapus produk dari keranjang.');
-            }
-        }
-
-        function quickBuy(productId) {
-            addToCart(productId);
-            const targetSection = document.getElementById('form-pesanan');
-            if (targetSection) {
-                setTimeout(() => {
-                    targetSection.scrollIntoView({
-                        behavior: 'smooth'
+                    Swal.fire({
+                        title: 'Karya Ditambahkan',
+                        text: data.message,
+                        icon: 'success',
+                        confirmButtonColor: '#1c1917',
+                        iconColor: '#f59e0b',
+                    }).then(() => {
+                        window.location.reload();
                     });
-                }, 500);
+                }
+            } catch (error) {
+                Swal.fire({
+                    title: 'Gagal',
+                    text: 'Terjadi kesalahan sistem.',
+                    icon: 'error',
+                    confirmButtonColor: '#7f1d1d'
+                });
+            }
+        }
+
+        async function removeFromCart(productId) {
+            const result = await Swal.fire({
+                title: 'Hapus Pesanan?',
+                text: "Karya ini akan dikeluarkan dari keranjang belanja Anda.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#1c1917',
+                cancelButtonColor: '#78716c',
+                confirmButtonText: 'Ya, Hapus',
+                cancelButtonText: 'Batal'
+            });
+
+            if (result.isConfirmed) {
+                try {
+                    const response = await fetch("{{ route('remove.from.cart') }}", {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            id: productId
+                        })
+                    });
+
+                    const data = await response.json();
+                    if (data.status === 'success') {
+                        Swal.fire({
+                            title: 'Terupdate',
+                            text: 'Keranjang berhasil diperbarui.',
+                            icon: 'success',
+                            confirmButtonColor: '#1c1917'
+                        }).then(() => {
+                            window.location.reload();
+                        });
+                    }
+                } catch (error) {
+                    Swal.fire('Gagal', 'Gagal memperbarui keranjang.', 'error');
+                }
             }
         }
     </script>

@@ -23,7 +23,7 @@
             <a href="#form-pesanan"
                 :class="scrolled ? 'bg-amber-700 text-white hover:bg-amber-800 shadow-xl' :
                     'bg-stone-50 text-black hover:bg-amber-700 shadow-lg'"
-                class="flex items-center gap-3 text-white px-5 py-2.5 rounded-full text-[10px] font-bold uppercase tracking-widest hover:bg-amber-700 transition-all shadow-lg">
+                class="flex items-center gap-3 text-black px-5 py-2.5 rounded-full text-[10px] font-bold uppercase tracking-widest hover:bg-amber-700 transition-all shadow-lg">
                 <i class="fa-solid fa-cart-shopping"></i>
                 <span>Cart</span>
                 <span id="cart-count" class="bg-amber-500 text-stone-900 px-2 py-0.5 rounded-full text-[9px]">

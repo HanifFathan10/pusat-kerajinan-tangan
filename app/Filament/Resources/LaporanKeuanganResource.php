@@ -9,9 +9,6 @@ use App\Models\Penjualan;
 use App\Models\PembelianBahanBaku;
 use App\Models\JadwalProduksi;
 use Barryvdh\DomPDF\Facade\Pdf;
-use Filament\Actions\Action;
-use Filament\Actions\DeleteAction;
-use Filament\Actions\EditAction;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Group;
@@ -28,6 +25,9 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Support\Carbon;
 use Filament\Support\Enums\FontWeight;
+use Filament\Tables\Actions\Action;
+use Filament\Tables\Actions\DeleteAction;
+use Filament\Tables\Actions\EditAction;
 use Illuminate\Support\Facades\Auth;
 
 class LaporanKeuanganResource extends Resource
