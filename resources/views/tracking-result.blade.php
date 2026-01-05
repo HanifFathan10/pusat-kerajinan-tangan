@@ -122,6 +122,18 @@
                                 <p class="text-xs italic text-stone-600">
                                     "{{ $penjualan->catatan ?? 'Tidak ada catatan khusus.' }}"</p>
                             </div>
+
+                            @if ($penjualan->status_pembayaran == 'lunas')
+                                <div class="mt-8 pt-6 border-t border-stone-200">
+                                    <a href="{{ route('kwitansi.download', $penjualan->id) }}"
+                                        class="bg-stone-900 px-5 py-3 text-white rounded-full hover:bg-amber-800 transition-all shadow-xl active:scale-95 cursor-pointer flex gap-3 justify-center items-center text-lg decoration-none">
+                                        <i class="fa-solid fa-receipt text-sm"></i>
+                                        <span class="text-[10px] font-bold uppercase tracking-[0.2em]">
+                                            Download Kwitansi
+                                        </span>
+                                    </a>
+                                </div>
+                            @endif
                         </div>
                     </div>
 

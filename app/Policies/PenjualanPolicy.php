@@ -29,7 +29,7 @@ class PenjualanPolicy
      */
     public function create(User $user): bool
     {
-        return $user->hasAnyRole(['Administrator', 'Pusat Pengelola', 'Tim Keuangan']);
+        return $user->hasAnyRole(['Administrator', 'Pusat Pengelola']);
     }
 
     /**
@@ -37,7 +37,7 @@ class PenjualanPolicy
      */
     public function update(User $user, Penjualan $penjualan): bool
     {
-        return $user->hasAnyRole(['Administrator', 'Pusat Pengelola', 'Tim Keuangan']);
+        return $user->hasAnyRole(['Administrator', 'Pusat Pengelola']);
     }
 
     /**
@@ -45,7 +45,7 @@ class PenjualanPolicy
      */
     public function delete(User $user, Penjualan $penjualan): bool
     {
-        return $user->hasAnyRole(['Administrator', 'Pusat Pengelola', 'Tim Keuangan']);
+        return $user->hasAnyRole(['Administrator']);
     }
 
     /**
@@ -53,7 +53,7 @@ class PenjualanPolicy
      */
     public function restore(User $user, Penjualan $penjualan): bool
     {
-        return $user->hasAnyRole(['Administrator', 'Pusat Pengelola', 'Tim Keuangan']);
+        return $user->hasAnyRole(['Administrator']);
     }
 
     /**
@@ -61,6 +61,6 @@ class PenjualanPolicy
      */
     public function forceDelete(User $user, Penjualan $penjualan): bool
     {
-        return $user->hasAnyRole(['Administrator', 'Pusat Pengelola', 'Tim Keuangan']);
+        return $user->hasAnyRole(['Administrator']);
     }
 }

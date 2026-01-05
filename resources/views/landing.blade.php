@@ -213,5 +213,17 @@
                 }
             }
         }
+
+        function quickBuy(productId) {
+            addToCart(productId);
+            const targetSection = document.getElementById('form-pesanan');
+            if (targetSection) {
+                setTimeout(() => {
+                    targetSection.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }, 500);
+            }
+        }
     </script>
 @endpush

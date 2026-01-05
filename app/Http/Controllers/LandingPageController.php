@@ -6,6 +6,7 @@ use App\Models\DetailPenjualan;
 use App\Models\Pelanggan;
 use App\Models\Penjualan;
 use App\Models\Produk;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -37,7 +38,7 @@ class LandingPageController extends Controller
             default => $query->latest(),
         };
 
-        $produks = $query->paginate(9)->withQueryString();
+        $produks = $query->paginate(6)->withQueryString();
 
         $cart = session()->get('cart', []);
         $total = array_reduce($cart, function ($carry, $item) {
@@ -192,10 +193,19 @@ class LandingPageController extends Controller
         }
     }
 
-    // LandingPageController.php
     public function success($id)
     {
         $penjualan = Penjualan::with(['pelanggan', 'detailPenjualan.produk'])->findOrFail($id);
         return view('success', compact('penjualan'));
+    }
+
+    public function downloadKwitansi($id)
+    {
+        $penjualan = Penjualan::with(['pelanggan', 'detailPenjualan.produk'])->findOrFail($id);
+
+        $pdf = Pdf::loadView('pdf.kwitansi', compact('penjualan'))
+            ->setPaper('a5', 'portrait');
+
+        return $pdf->download("Kwitansi-{$penjualan->id}.pdf");
     }
 }

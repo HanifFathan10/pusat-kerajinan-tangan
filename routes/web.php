@@ -13,3 +13,4 @@ Route::post('/remove-from-cart', [LandingPageController::class, 'removeFromCart'
 Route::get('/success/{id}', [LandingPageController::class, 'success'])->name('landing.success');
 Route::get('/track-order', [LandingPageController::class, 'trackOrder'])->name('order.track');
 Route::get('/invoice/{penjualan}', [PdfController::class, 'cetakInvoice'])->name('cetak.invoice');
+Route::get('/download-kwitansi/{id}', [LandingPageController::class, 'downloadKwitansi'])->name('kwitansi.download');
