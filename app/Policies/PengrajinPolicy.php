@@ -13,7 +13,6 @@ class PengrajinPolicy
      */
     public function viewAny(User $user): bool
     {
-        // Pekerja tidak boleh melihat menu "Data Pengrajin"
         return $user->hasAnyRole(['Administrator', 'Pusat Pengelola']);
     }
 

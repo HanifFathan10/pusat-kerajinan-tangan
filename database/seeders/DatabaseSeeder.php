@@ -2,16 +2,19 @@
 
 namespace Database\Seeders;
 
-use App\Models\{Produk, Pelanggan, Pengrajin, TimKeuangan, BahanBaku};
+use App\Models\{Produk, Pelanggan, Pengrajin, TimKeuangan, BahanBaku, User};
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\{DB, Hash, Storage, Log};
 use Illuminate\Support\Str;
+use Spatie\Permission\Models\Role;
 
 class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
         DB::transaction(function () {
+
+            $this->call(RoleAndUserSeeder::class);
 
             $subFolder = 'produk-images';
 
@@ -54,12 +57,19 @@ class DatabaseSeeder extends Seeder
             }
 
             $pengrajin = [
-                ['nama_pengrajin' => 'Mang Ujang (Ahli Kayu)', 'email_pengrajin' => 'ujang@craft.com', 'telepon_pengrajin' => '081311112222', 'alamat_pengrajin' => 'Desa Jelekong, Kab. Bandung'],
-                ['nama_pengrajin' => 'Teh Lilis (Ahli Jahit)', 'email_pengrajin' => 'lilis@craft.com', 'telepon_pengrajin' => '081333334444', 'alamat_pengrajin' => 'Cibaduyut, Kota Bandung'],
-                ['nama_pengrajin' => 'Pak Asep (Anyaman)', 'email_pengrajin' => 'asep@craft.com', 'telepon_pengrajin' => '081355556666', 'alamat_pengrajin' => 'Rajapolah, Tasikmalaya'],
+                ['nama_pengrajin' => 'Mang Ujang (Ahli Kayu)', 'email_pengrajin' => 'ujang@pkt.com', 'telepon_pengrajin' => '081311112222', 'alamat_pengrajin' => 'Desa Jelekong, Kab. Bandung'],
+                ['nama_pengrajin' => 'Teh Lilis (Ahli Jahit)', 'email_pengrajin' => 'lilis@pkt.com', 'telepon_pengrajin' => '081333334444', 'alamat_pengrajin' => 'Cibaduyut, Kota Bandung'],
+                ['nama_pengrajin' => 'Pak Lukman (Anyaman)', 'email_pengrajin' => 'lukman@pkt.com', 'telepon_pengrajin' => '081355556666', 'alamat_pengrajin' => 'Rajapolah, Tasikmalaya'],
             ];
             foreach ($pengrajin as $pj) {
                 DB::table('pengrajin')->updateOrInsert(['telepon_pengrajin' => $pj['telepon_pengrajin']], array_merge($pj, ['created_at' => now(), 'updated_at' => now()]));
+            }
+
+            $rolePekerja = Role::findByName('Pekerja', 'web');
+
+            foreach ($pengrajin as $pj) {
+                $user = User::create(['name' => $pj['nama_pengrajin'], 'email' => $pj['email_pengrajin'], 'password' => Hash::make('password123')]);
+                $user->assignRole($rolePekerja);
             }
 
             $bahanBaku = [
@@ -137,8 +147,6 @@ class DatabaseSeeder extends Seeder
                 );
             }
         });
-
-        $this->call(RoleAndUserSeeder::class);
 
         $this->command->info('🎉 SELESAI! Data dummy dari SQL dan Seeder berhasil disinkronisasi tanpa data NULL.');
     }

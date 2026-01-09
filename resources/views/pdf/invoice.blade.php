@@ -3,169 +3,306 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Invoice #{{ str_pad($data->id, 5, '0', STR_PAD_LEFT) }} - PKT Artisan</title>
-    @vite('resources/css/app.css')
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&family=Playfair+Display:ital,wght@0,600;1,700&display=swap"
-        rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice #{{ str_pad($data->id, 5, '0', STR_PAD_LEFT) }} - Nusantara PKT</title>
+
     <style>
-        :root {
-            --wood-dark: #3D2B1F;
-            --leather-tan: #A67B5B;
-            --clay-light: #F2E8DF;
-            --copper-accent: #B87333;
-            --gold-premium: #D4AF37;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
         body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: #FDFBFA;
-            color: var(--wood-dark);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            color: #1f2937;
+            background-color: #f3f4f6;
+            line-height: 1.6;
+            padding: 40px 20px;
         }
 
-        .font-serif {
-            font-family: 'Playfair Display', serif;
+        .invoice-card {
+            max-width: 850px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
         }
 
-        .bg-clay {
-            background-color: var(--clay-light);
+        .accent-bar {
+            height: 6px;
+            background: #111827;
         }
 
-        .text-copper {
-            color: var(--copper-accent);
+        .header {
+            padding: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 1px solid #f3f4f6;
         }
 
-        .btn-premium {
-            background: linear-gradient(135deg, var(--wood-dark) 0%, #1a1a1a 100%);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        .brand h1 {
+            font-size: 24px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: #111827;
         }
 
-        .btn-premium:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        .brand p {
+            font-size: 12px;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
-        .product-card img {
-            transition: transform 0.7s scale;
+        .status-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 99px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            background: #fef3c7;
+            color: #92400e;
+            margin-bottom: 10px;
         }
 
-        .product-card:hover img {
-            transform: scale(1.08);
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            padding: 40px;
+            gap: 20px;
         }
 
-        .font-serif-italic {
-            font-family: 'Playfair Display', serif;
-            font-style: italic;
+        .info-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: #9ca3af;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .info-value {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .customer-name {
+            font-size: 18px;
+            font-weight: 700;
+            color: #111827;
+        }
+
+        .table-area {
+            padding: 0 40px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            text-align: left;
+            font-size: 11px;
+            text-transform: uppercase;
+            color: #6b7280;
+            padding: 15px 0;
+            border-bottom: 2px solid #111827;
+        }
+
+        td {
+            padding: 20px 0;
+            border-bottom: 1px solid #f3f4f6;
+            font-size: 14px;
+        }
+
+        .text-right {
+            text-align: right;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            padding: 40px;
+            gap: 50px;
+        }
+
+        .payment-info {
+            background: #f9fafb;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .payment-info p {
+            font-size: 13px;
+            margin-bottom: 5px;
+        }
+
+        .total-box {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+        }
+
+        .grand-total {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 2px solid #111827;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .grand-total span {
+            font-size: 18px;
+            font-weight: 800;
+            color: #111827;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            border: none;
+            transition: 0.2s;
+        }
+
+        .btn-dark {
+            background: #111827;
+            color: white;
+        }
+
+        .btn-light {
+            color: #6b7280;
+        }
+
+        .btn:hover {
+            opacity: 0.8;
         }
 
         @media print {
-            .no-print {
-                display: none;
-            }
-
             body {
                 background: white;
+                padding: 0;
+            }
+
+            .invoice-card {
+                box-shadow: none;
+                border: 1px solid #eee;
+                width: 100%;
+                max-width: none;
+            }
+
+            .controls {
+                display: none;
             }
         }
     </style>
 </head>
 
-<body class="bg-stone-50 antialiased text-stone-900 p-0 md:p-8">
-    <div class="max-w-4xl mx-auto bg-white shadow-2xl overflow-hidden md:rounded-4xl border border-stone-100">
-        <div class="h-2 w-full bg-linear-to-r from-[#3D2B1F] to-[#B87333]"></div>
+<body>
+    <div class="invoice-card">
+        <div class="accent-bar"></div>
 
-        <div class="p-8 md:p-16">
-            <div class="flex flex-col md:flex-row justify-between items-start mb-16 gap-8">
-                <div>
-                    <h1 class="text-3xl font-black tracking-tighter text-stone-900 uppercase">PKT Artisan</h1>
-                    <p class="text-[10px] font-bold uppercase tracking-[0.4em] text-amber-600 mt-1">Premium Handcrafted
-                        Goods</p>
-                </div>
-                <div class="text-right">
-                    <h2 class="text-6xl font-black text-stone-100 uppercase leading-none">Invoice</h2>
-                    <p class="text-sm font-mono text-stone-400 mt-2 italic">
-                        #{{ str_pad($data->id, 5, '0', STR_PAD_LEFT) }}</p>
-                </div>
+        <div class="header">
+            <div class="brand">
+                <h1>Nusantara PKT</h1>
+                <p>Studio Produksi Kerajinan</p>
             </div>
-
-            <div class="grid md:grid-cols-3 gap-12 mb-16">
-                <div>
-                    <h4 class="text-[10px] font-bold uppercase tracking-widest text-stone-400 mb-4 italic">Pelanggan
-                    </h4>
-                    <p class="font-serif-italic text-xl text-stone-900">{{ $data->pelanggan->nama_pelanggan }}</p>
-                    <p class="text-xs text-stone-500 leading-relaxed mt-2">{{ $data->pelanggan->alamat_pelanggan }}</p>
-                </div>
-                <div>
-                    <h4 class="text-[10px] font-bold uppercase tracking-widest text-stone-400 mb-4 italic">Rincian Waktu
-                    </h4>
-                    <p class="text-sm font-bold text-stone-900">{{ date('d F Y', strtotime($data->tanggal)) }}</p>
-                    <p class="text-[10px] text-stone-400 uppercase tracking-tighter">Batas Bayar: +3 Hari</p>
-                </div>
-                <div class="text-right">
-                    <h4 class="text-[10px] font-bold uppercase tracking-widest text-stone-400 mb-4 italic">Metode</h4>
-                    <span
-                        class="px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest bg-stone-100 text-stone-700">Transfer
-                        Bank</span>
-                </div>
+            <div style="text-align: right;">
+                <div class="status-badge">{{ $data->status_pembayaran }}</div>
+                <p style="font-size: 14px; font-weight: 700;">
+                    INV/{{ date('Ymd', strtotime($data->tanggal)) }}/{{ $data->id }}</p>
+                <p style="font-size: 12px; color: #6b7280;">Tanggal: {{ date('d F Y', strtotime($data->tanggal)) }}</p>
             </div>
+        </div>
 
-            <div class="overflow-hidden rounded-3xl border border-stone-100 mb-12">
-                <table class="w-full text-left border-collapse">
-                    <thead>
-                        <tr
-                            class="bg-stone-50 border-b border-stone-100 text-[10px] uppercase tracking-widest text-stone-400">
-                            <th class="px-8 py-5">Item Produk</th>
-                            <th class="px-8 py-5 text-center">Qty</th>
-                            <th class="px-8 py-5 text-right">Harga</th>
-                            <th class="px-8 py-5 text-right">Subtotal</th>
+        <div class="info-grid">
+            <div>
+                <span class="info-label">Pelanggan</span>
+                <p class="customer-name">{{ $data->pelanggan->nama_pelanggan }}</p>
+                <p class="info-value" style="color: #6b7280; margin-top: 5px;">{{ $data->pelanggan->alamat_pelanggan }}
+                </p>
+            </div>
+            <div style="text-align: right;">
+                <span class="info-label">Metode Pembayaran</span>
+                <p class="info-value">Transfer Bank (BCA)</p>
+            </div>
+        </div>
+
+        <div class="table-area">
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 50%;">Item</th>
+                        <th class="text-center">Kuantitas</th>
+                        <th class="text-right">Harga</th>
+                        <th class="text-right">Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($data->detailPenjualan as $item)
+                        <tr>
+                            <td>
+                                <div style="font-weight: 700;">{{ $item->produk->nama_produk }}</div>
+                                <div style="font-size: 11px; color: #9ca3af;">Produk Handmade Premium</div>
+                            </td>
+                            <td class="text-center">{{ $item->jumlah }}</td>
+                            <td class="text-right">Rp {{ number_format($item->harga_satuan, 0, ',', '.') }}</td>
+                            <td class="text-right" style="font-weight: 700;">Rp
+                                {{ number_format($item->sub_total, 0, ',', '.') }}</td>
                         </tr>
-                    </thead>
-                    <tbody class="divide-y divide-stone-50">
-                        @foreach ($data->detailPenjualan as $item)
-                            <tr class="text-sm">
-                                <td class="px-8 py-6 font-serif-italic text-stone-900 text-lg">
-                                    {{ $item->produk->nama_produk }}</td>
-                                <td class="px-8 py-6 text-center text-stone-600">{{ $item->jumlah }}</td>
-                                <td class="px-8 py-6 text-right text-stone-400 italic">
-                                    Rp{{ number_format($item->harga_satuan, 0, ',', '.') }}</td>
-                                <td class="px-8 py-6 text-right font-bold text-stone-900">
-                                    Rp{{ number_format($item->sub_total, 0, ',', '.') }}</td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
 
-            <div class="flex flex-col md:flex-row justify-between items-end gap-8">
-                <div class="text-xs text-stone-400 italic max-w-xs">
-                    *Harap sertakan nomor invoice pada berita transfer untuk proses verifikasi yang lebih cepat.
+        <div class="footer-grid">
+            <div class="payment-info">
+                <span class="info-label">Instruksi Pembayaran</span>
+                <p><strong>Bank BCA</strong></p>
+                <p style="font-family: monospace; font-size: 16px; font-weight: 700;">8829 1002 991</p>
+                <p style="font-size: 12px; color: #6b7280;">a.n Nusantara PKT</p>
+            </div>
+            <div class="total-box">
+                <div class="total-row">
+                    <span style="color: #6b7280;">Subtotal</span>
+                    <span>Rp {{ number_format($data->total_harga, 0, ',', '.') }}</span>
                 </div>
-                <div class="w-full md:w-80 space-y-3">
-                    <div class="flex justify-between text-sm px-4">
-                        <span class="text-stone-400">Subtotal</span>
-                        <span class="font-bold">Rp{{ number_format($data->total_harga, 0, ',', '.') }}</span>
-                    </div>
-                    <div class="flex justify-between text-sm px-4 border-b border-stone-100 pb-3">
-                        <span class="text-stone-400">Pajak (0%)</span>
-                        <span class="font-bold">Rp 0</span>
-                    </div>
-                    <div class="bg-stone-900 rounded-2xl p-6 text-white shadow-xl shadow-stone-900/20">
-                        <p class="text-[10px] uppercase tracking-[0.3em] opacity-50 mb-1">Total Akhir</p>
-                        <p class="text-2xl font-bold tracking-tighter">
-                            Rp{{ number_format($data->total_harga, 0, ',', '.') }}</p>
-                    </div>
+                <div class="total-row">
+                    <span style="color: #6b7280;">Pajak (0%)</span>
+                    <span>Rp 0</span>
+                </div>
+                <div class="grand-total">
+                    <span style="font-size: 11px; text-transform: uppercase;">Total Bayar</span>
+                    <span>Rp {{ number_format($data->total_harga, 0, ',', '.') }}</span>
                 </div>
             </div>
         </div>
 
-        <div class="bg-stone-50 p-8 text-center border-t border-stone-100">
-            <p class="text-[10px] text-stone-400 italic">Terima kasih telah mendukung komunitas pengrajin lokal melalui
-                PKT Artisan.</p>
+        <div
+            style="padding: 20px 40px; background: #111827; color: #9ca3af; font-size: 10px; text-align: center; text-transform: uppercase; letter-spacing: 1px;">
+            Terima kasih telah berbelanja di Nusantara PKT &bull; Dokumen ini Sah & Digital
         </div>
     </div>
+
 </body>
 
 </html>

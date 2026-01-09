@@ -13,7 +13,6 @@ class PembelianBahanBakuPolicy
      */
     public function viewAny(User $user): bool
     {
-        // Pekerja dilarang melihat menu Belanja Bahan
         return $user->hasAnyRole(['Administrator', 'Pusat Pengelola', 'Tim Keuangan']);
     }
 
@@ -30,7 +29,7 @@ class PembelianBahanBakuPolicy
      */
     public function create(User $user): bool
     {
-        return $user->hasAnyRole(['Administrator', 'Pusat Pengelola', 'Tim Keuangan']);
+        return $user->hasAnyRole(['Administrator', 'Pusat Pengelola']);
     }
 
     /**
@@ -38,7 +37,7 @@ class PembelianBahanBakuPolicy
      */
     public function update(User $user, PembelianBahanBaku $pembelianBahanBaku): bool
     {
-        return $user->hasAnyRole(['Administrator', 'Pusat Pengelola', 'Tim Keuangan']);
+        return $user->hasAnyRole(['Administrator', 'Pusat Pengelola']);
     }
 
     /**
@@ -46,7 +45,7 @@ class PembelianBahanBakuPolicy
      */
     public function delete(User $user, PembelianBahanBaku $pembelianBahanBaku): bool
     {
-        return $user->hasAnyRole(['Administrator', 'Pusat Pengelola', 'Tim Keuangan']);
+        return $user->hasAnyRole(['Administrator', 'Pusat Pengelola']);
     }
 
     /**
@@ -54,7 +53,7 @@ class PembelianBahanBakuPolicy
      */
     public function restore(User $user, PembelianBahanBaku $pembelianBahanBaku): bool
     {
-        return $user->hasAnyRole(['Administrator', 'Pusat Pengelola', 'Tim Keuangan']);
+        return $user->hasAnyRole(['Administrator', 'Pusat Pengelola']);
     }
 
     /**
@@ -62,6 +61,6 @@ class PembelianBahanBakuPolicy
      */
     public function forceDelete(User $user, PembelianBahanBaku $pembelianBahanBaku): bool
     {
-        return $user->hasAnyRole(['Administrator', 'Pusat Pengelola', 'Tim Keuangan']);
+        return $user->hasAnyRole(['Administrator', 'Pusat Pengelola']);
     }
 }

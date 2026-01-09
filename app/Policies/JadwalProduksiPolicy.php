@@ -13,7 +13,6 @@ class JadwalProduksiPolicy
      */
     public function viewAny(User $user): bool
     {
-        // Semua role yang terdaftar boleh melihat menu ini
         return $user->hasAnyRole(['Administrator', 'Pusat Pengelola', 'Tim Keuangan', 'Pekerja']);
     }
 

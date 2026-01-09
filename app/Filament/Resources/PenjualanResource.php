@@ -239,7 +239,8 @@ class PenjualanResource extends Resource
                     ->icon('heroicon-o-printer')
                     ->color('gray')
                     ->url(fn(Penjualan $record) => route('cetak.invoice', $record))
-                    ->openUrlInNewTab(),
+                    ->openUrlInNewTab()
+                    ->hidden(fn(Penjualan $record) => $record->status_pembayaran === 'pending'),
             ])
             ->bulkActions([
                 BulkActionGroup::make([

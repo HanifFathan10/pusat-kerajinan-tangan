@@ -93,36 +93,39 @@ class PengrajinResource extends Resource
                     ->searchable()
                     ->sortable()
                     ->weight(FontWeight::Bold)
-                    ->description(fn(Pengrajin $record): string => $record->email_pengrajin ?? '-') // Email jadi subtext
+                    ->description(fn(Pengrajin $record): string => $record->email_pengrajin ?? '-')
                     ->icon('heroicon-m-user'),
+
+                TextColumn::make('riwayat_produksi_count')
+                    ->label('Total Tugas')
+                    ->counts('riwayatProduksi')
+                    ->badge()
+                    ->color('info')
+                    ->alignCenter(),
 
                 TextColumn::make('telepon_pengrajin')
                     ->label('Hubungi')
                     ->icon('heroicon-m-chat-bubble-left-right')
                     ->color('success')
-                    ->searchable()
+                    ->description('Klik untuk WhatsApp')
                     ->url(fn(string $state): string => 'https://wa.me/' . preg_replace('/^0/', '62', preg_replace('/[^0-9]/', '', $state)), true),
 
                 TextColumn::make('alamat_pengrajin')
                     ->label('Domisili')
-                    ->limit(20)
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->limit(30)
+                    ->wrap()
+                    ->toggleable(),
 
                 TextColumn::make('created_at')
-                    ->label('Bergabung')
-                    ->date('M Y')
+                    ->label('Bergabung Sejak')
+                    ->date('d M Y')
                     ->sortable()
-                    ->badge()
-                    ->color('gray'),
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->defaultSort('nama_pengrajin', 'asc')
-            ->contentGrid([
-                'md' => 2,
-                'xl' => 3,
-            ])
             ->actions([
-                EditAction::make()->iconButton(),
-                DeleteAction::make()->iconButton(),
+                EditAction::make(),
+                DeleteAction::make(),
             ])
             ->bulkActions([
                 BulkActionGroup::make([

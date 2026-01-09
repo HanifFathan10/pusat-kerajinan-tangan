@@ -13,7 +13,7 @@ class PenjualanPolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user->hasAnyRole(['Administrator', 'Pusat Pengelola', 'Tim Keuangan']);
+        return $user->hasAnyRole(['Administrator', 'Tim Keuangan']);
     }
 
     /**
@@ -21,7 +21,7 @@ class PenjualanPolicy
      */
     public function view(User $user, Penjualan $penjualan): bool
     {
-        return $user->hasAnyRole(['Administrator', 'Pusat Pengelola', 'Tim Keuangan']);
+        return $user->hasAnyRole(['Administrator', 'Tim Keuangan']);
     }
 
     /**
@@ -29,7 +29,7 @@ class PenjualanPolicy
      */
     public function create(User $user): bool
     {
-        return $user->hasAnyRole(['Administrator', 'Pusat Pengelola']);
+        return $user->hasAnyRole(['Administrator', 'Tim Keuangan']);
     }
 
     /**
@@ -37,7 +37,7 @@ class PenjualanPolicy
      */
     public function update(User $user, Penjualan $penjualan): bool
     {
-        return $user->hasAnyRole(['Administrator', 'Pusat Pengelola']);
+        return $user->hasAnyRole(['Administrator']);
     }
 
     /**

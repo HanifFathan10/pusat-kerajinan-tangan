@@ -13,7 +13,7 @@ class PelangganPolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user->hasAnyRole(['Administrator', 'Pusat Pengelola', 'Tim Keuangan']);
+        return $user->hasAnyRole(['Administrator', 'Tim Keuangan']);
     }
 
     /**
@@ -21,7 +21,7 @@ class PelangganPolicy
      */
     public function view(User $user, Pelanggan $pelanggan): bool
     {
-        return $user->hasAnyRole(['Administrator', 'Pusat Pengelola', 'Tim Keuangan']);
+        return $user->hasAnyRole(['Administrator', 'Tim Keuangan']);
     }
 
     /**
@@ -29,7 +29,7 @@ class PelangganPolicy
      */
     public function create(User $user): bool
     {
-        return $user->hasAnyRole(['Administrator', 'Pusat Pengelola']);
+        return $user->hasAnyRole(['Administrator']);
     }
 
     /**
@@ -37,7 +37,7 @@ class PelangganPolicy
      */
     public function update(User $user, Pelanggan $pelanggan): bool
     {
-        return $user->hasAnyRole(['Administrator', 'Pusat Pengelola']);
+        return $user->hasAnyRole(['Administrator']);
     }
 
     /**
@@ -45,7 +45,7 @@ class PelangganPolicy
      */
     public function delete(User $user, Pelanggan $pelanggan): bool
     {
-        return $user->hasAnyRole(['Administrator', 'Pusat Pengelola']);
+        return $user->hasAnyRole(['Administrator']);
     }
 
     /**
@@ -53,7 +53,7 @@ class PelangganPolicy
      */
     public function restore(User $user, Pelanggan $pelanggan): bool
     {
-        return $user->hasAnyRole(['Administrator', 'Pusat Pengelola']);
+        return $user->hasAnyRole(['Administrator']);
     }
 
     /**
@@ -61,6 +61,6 @@ class PelangganPolicy
      */
     public function forceDelete(User $user, Pelanggan $pelanggan): bool
     {
-        return $user->hasAnyRole(['Administrator', 'Pusat Pengelola']);
+        return $user->hasAnyRole(['Administrator']);
     }
 }

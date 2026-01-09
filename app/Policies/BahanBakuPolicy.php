@@ -13,7 +13,7 @@ class BahanBakuPolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user->hasAnyRole(['Administrator', 'Pusat Pengelola']);
+        return $user->hasAnyRole(['Administrator', 'Pusat Pengelola', 'Tim Keuangan']);
     }
 
     /**
@@ -21,7 +21,7 @@ class BahanBakuPolicy
      */
     public function view(User $user, BahanBaku $bahanBaku): bool
     {
-        return $user->hasAnyRole(['Administrator', 'Pusat Pengelola']);
+        return $user->hasAnyRole(['Administrator', 'Pusat Pengelola', 'Tim Keuangan']);
     }
 
     /**
