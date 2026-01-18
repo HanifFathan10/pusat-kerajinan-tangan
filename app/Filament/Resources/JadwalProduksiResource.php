@@ -139,7 +139,7 @@ class JadwalProduksiResource extends Resource
                                     ->required()
                                     ->native(false)
                                     ->displayFormat('d M Y')
-                                    ->closeOnDateSelection(),
+                                    ->disabled(fn(?JadwalProduksi $record) => $record?->status_produksi === 'selesai'),
 
                                 DatePicker::make('tanggal_selesai')
                                     ->label('Deadline')
@@ -147,7 +147,7 @@ class JadwalProduksiResource extends Resource
                                     ->native(false)
                                     ->displayFormat('d M Y')
                                     ->afterOrEqual('tanggal_mulai')
-                                    ->closeOnDateSelection(),
+                                    ->disabled(fn(?JadwalProduksi $record) => $record?->status_produksi === 'selesai'),
 
                                 ToggleButtons::make('prioritas')
                                     ->label('Tingkat Prioritas')
@@ -178,9 +178,9 @@ class JadwalProduksiResource extends Resource
                                         'selesai' => '✅ Selesai',
                                         'batal' => '❌ Dibatalkan',
                                     ])
-                                    ->default('rencana')
                                     ->required()
                                     ->native(false)
+                                    ->disabled(fn(?JadwalProduksi $record) => $record?->status_produksi === 'selesai')
                                     ->disableOptionWhen(fn(string $value): bool => $value === 'selesai'),
                             ]),
                     ])->columnSpan(['lg' => 1]),
@@ -268,7 +268,7 @@ class JadwalProduksiResource extends Resource
                 EditAction::make()->iconButton(),
 
                 Action::make('selesaikan_produksi')
-                    ->label('Selesai & Upah')
+                    ->label('Finalisasi & Upah')
                     ->icon('heroicon-m-banknotes')
                     ->color('success')
                     ->requiresConfirmation()
@@ -326,7 +326,10 @@ class JadwalProduksiResource extends Resource
                     ->action(function (Model $record, array $data) {
                         foreach ($record->jadwalBahan as $item) {
                             if ($item->bahanBaku->stok < $item->jumlah_dipakai) {
-                                Notification::make()->title('Stok Bahan Baku Tidak Cukup!')->danger()->send();
+                                Notification::make()
+                                    ->title('Gagal: Stok ' . $item->bahanBaku->nama_bahan . ' tidak cukup!')
+                                    ->danger()
+                                    ->send();
                                 return;
                             }
                         }
@@ -442,7 +445,7 @@ class JadwalProduksiResource extends Resource
                         /** @var \App\Models\User $user */
                         $user = Auth::user();
 
-                        return $record->status_produksi === 'selesai' &&
+                        return $record->status_produksi == 'selesai' &&
                             $user->hasAnyRole(['Administrator', 'Pusat Pengelola']);
                     }),
             ])
@@ -468,10 +471,8 @@ class JadwalProduksiResource extends Resource
         $user = Auth::user();
         $query = parent::getEloquentQuery();
 
-        if ($user && $user->hasRole('Pekerja')) {
-            return $query->whereHas('pengrajin', function ($q) use ($user) {
-                $q->where('email_pengrajin', $user->email);
-            });
+        if ($user->hasRole('Pekerja')) {
+            return $query->whereHas('pengrajin', fn($q) => $q->where('email_pengrajin', $user->email));
         }
 
         return $query;

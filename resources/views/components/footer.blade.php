@@ -15,22 +15,20 @@
             </div>
 
             <div>
-                <h5 class="text-[10px] font-bold uppercase tracking-[0.3em] mb-8">E-Commerce</h5>
+                <h5 class="text-[10px] font-bold uppercase tracking-[0.3em] mb-8">Informasi</h5>
                 <ul class="space-y-4 text-xs text-stone-400 font-medium">
-                    <li><a href="#" class="hover:text-white transition">New Arrivals</a></li>
-                    <li><a href="#" class="hover:text-white transition">Best Sellers</a></li>
-                    <li><a href="#" class="hover:text-white transition">Limited Edition</a></li>
-                    <li><a href="#" class="hover:text-white transition">Gift Cards</a></li>
+                    <li><a href="#" class="hover:text-white transition">Whatsapp</a></li>
+                    <li><a href="#" class="hover:text-white transition">Instagram</a></li>
+                    <li><a href="#" class="hover:text-white transition">Email</a></li>
+                    <li><a href="#" class="hover:text-white transition">Facebook</a></li>
                 </ul>
             </div>
 
             <div>
                 <h5 class="text-[10px] font-bold uppercase tracking-[0.3em] mb-8">Bantuan</h5>
                 <ul class="space-y-4 text-xs text-stone-400 font-medium">
-                    <li><a href="#" class="hover:text-white transition">Lacak Pesanan</a></li>
-                    <li><a href="#" class="hover:text-white transition">Kebijakan Pengembalian</a></li>
-                    <li><a href="#" class="hover:text-white transition">Cara Perawatan</a></li>
-                    <li><a href="#" class="hover:text-white transition">FAQ</a></li>
+                    <li><a href="#produk" class="hover:text-white transition">Pesan Kerajinan</a></li>
+                    <li><a href="#tracking" class="hover:text-white transition">Lacak Pesanan</a></li>
                 </ul>
             </div>
 

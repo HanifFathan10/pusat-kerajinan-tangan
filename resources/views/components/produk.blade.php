@@ -79,11 +79,11 @@
                                 <div
                                     class="absolute inset-0 bg-stone-900/10 opacity-0 group-hover:opacity-100 transition-all duration-500 backdrop-blur-[2px] flex items-center justify-center gap-3">
                                     <button onclick="addToCart({{ $p->id }})"
-                                        class="bg-white text-stone-900 w-12 h-12 rounded-full flex items-center justify-center hover:bg-amber-700 hover:text-white transition-all shadow-xl hover:scale-110">
+                                        class="bg-white text-stone-900 w-12 h-12 rounded-full flex items-center justify-center hover:bg-amber-700 hover:text-white transition-all shadow-xl hover:scale-110 cursor-pointer">
                                         <i class="fa-solid fa-cart-plus"></i>
                                     </button>
                                     <button onclick="quickBuy({{ $p->id }})"
-                                        class="bg-stone-900 text-white px-6 py-3 rounded-full text-[9px] font-bold uppercase tracking-widest hover:bg-amber-700 transition-all shadow-xl hover:scale-105">
+                                        class="bg-stone-900 text-white px-6 py-3 rounded-full text-[9px] font-bold uppercase tracking-widest hover:bg-amber-700 transition-all shadow-xl hover:scale-105 cursor-pointer">
                                         Beli Langsung
                                     </button>
                                 </div>

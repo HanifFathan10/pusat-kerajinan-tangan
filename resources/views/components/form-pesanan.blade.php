@@ -43,14 +43,14 @@
 
     <div class="p-6 bg-stone-50 rounded-2xl border border-stone-100 flex items-start gap-4 mb-8">
         <i class="fa-solid fa-circle-info text-copper mt-1"></i>
-        <p class="text-[10px] text-stone-500 leading-relaxed italic">
+        <p class="text-base text-stone-500 leading-relaxed italic">
             Pesanan Anda akan diverifikasi oleh tim keuangan kami. Anda akan menerima notifikasi
             pembayaran melalui Email dan WhatsApp dalam waktu 1x24 jam.
         </p>
     </div>
 
     <button type="submit" @if (count((array) session('cart')) == 0) disabled @endif
-        class="w-full btn-premium py-5 text-white text-[11px] font-bold uppercase tracking-[0.3em] rounded-2xl disabled:opacity-30 disabled:cursor-not-allowed">
+        class="w-full btn-premium py-5 text-white text-[11px] font-bold uppercase tracking-[0.3em] rounded-2xl disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer">
         Konfirmasi & Pesan Sekarang
     </button>
 </form>

@@ -22,7 +22,7 @@
                         </div>
                         <div>
                             <button onclick="removeFromCart({{ $id }})"
-                                class="text-stone-400 hover:text-white transition">
+                                class="text-stone-400 hover:text-white transition cursor-pointer">
                                 <i class="fa-solid fa-xmark"></i>
                             </button>
                         </div>
