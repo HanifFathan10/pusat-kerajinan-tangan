@@ -36,7 +36,7 @@ class RoleAndUserSeeder extends Seeder
 
         $finance = User::create([
             'name'     => 'Adinda Finance',
-            'email'    => 'finance@pkt.com',
+            'email'    => 'adinda@pkt.com',
             'password' => Hash::make('password123'),
         ]);
         $finance->assignRole($roleFinance);

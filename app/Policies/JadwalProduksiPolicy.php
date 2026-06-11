@@ -45,11 +45,7 @@ class JadwalProduksiPolicy
             return false;
         }
 
-        if ($user->hasAnyRole(['Administrator', 'Pusat Pengelola'])) {
-            return true;
-        }
-
-        return $user->hasRole('Pekerja') && $jadwalProduksi->pengrajin->email_pengrajin === $user->email;
+        return $user->hasAnyRole(['Administrator', 'Pusat Pengelola']);
     }
 
     /**

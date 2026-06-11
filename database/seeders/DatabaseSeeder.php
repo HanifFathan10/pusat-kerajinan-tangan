@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\{Produk, Pelanggan, Pengrajin, TimKeuangan, BahanBaku, User};
+use App\Models\{Produk, User};
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\{DB, Hash, Storage, Log};
 use Illuminate\Support\Str;

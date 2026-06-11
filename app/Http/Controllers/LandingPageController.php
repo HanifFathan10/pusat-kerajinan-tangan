@@ -141,18 +141,25 @@ class LandingPageController extends Controller
             'email_pelanggan'   => 'required|email|max:255',
             'telepon_pelanggan' => 'required|string|max:20',
             'alamat_pelanggan'  => 'required|string',
+            'catatan'           => 'nullable|string',
         ]);
 
         try {
             return DB::transaction(function () use ($validated, $cart) {
-                $pelanggan = Pelanggan::updateOrCreate(
+                $pelanggan = Pelanggan::firstOrCreate(
                     ['email_pelanggan' => $validated['email_pelanggan']],
-                    $validated
+                    [
+                        'nama_pelanggan'    => $validated['nama_pelanggan'],
+                        'telepon_pelanggan' => $validated['telepon_pelanggan'],
+                        'alamat_pelanggan'  => $validated['alamat_pelanggan'],
+                    ]
                 );
 
                 $grandTotal = 0;
-                foreach ($cart as $item) {
-                    $grandTotal += $item['price'] * $item['quantity'];
+                foreach ($cart as $id => $item) {
+                    if (is_array($item) && isset($item['price'], $item['quantity'])) {
+                        $grandTotal += $item['price'] * $item['quantity'];
+                    }
                 }
 
                 $penjualan = Penjualan::create([
@@ -161,10 +168,12 @@ class LandingPageController extends Controller
                     'status_pembayaran' => 'pending',
                     'status_verifikasi' => 'belum_terverifikasi',
                     'id_pelanggan'      => $pelanggan->id,
-                    'catatan'           => $cart['catatan'] ?? null,
+                    'catatan'           => $validated['catatan'] ?? null,
                 ]);
 
                 foreach ($cart as $id => $details) {
+                    if (!is_array($details)) continue;
+
                     $produk = Produk::lockForUpdate()->find($id);
 
                     if ($produk && $produk->stok_produk >= $details['quantity']) {
@@ -178,7 +187,8 @@ class LandingPageController extends Controller
 
                         $produk->decrement('stok_produk', $details['quantity']);
                     } else {
-                        throw new \Exception("Stok produk {$details['name']} tidak mencukupi.");
+                        $namaProduk = $details['name'] ?? 'Tidak diketahui';
+                        throw new \Exception("Mohon maaf, stok untuk produk '{$namaProduk}' tidak mencukupi atau sudah habis.");
                     }
                 }
 
@@ -189,7 +199,8 @@ class LandingPageController extends Controller
             });
         } catch (\Exception $e) {
             Log::error('Checkout Error: ' . $e->getMessage());
-            return back()->with('error', 'Gagal memproses pesanan: ' . $e->getMessage());
+
+            return back()->with('error', $e->getMessage());
         }
     }
 

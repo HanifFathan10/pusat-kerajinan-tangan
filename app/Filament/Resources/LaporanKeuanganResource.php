@@ -3,7 +3,6 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\LaporanKeuanganResource\Pages;
-use App\Filament\Resources\LaporanKeuanganResource\Widgets\LaporanKeuanganChart;
 use App\Models\LaporanKeuangan;
 use App\Models\Penjualan;
 use App\Models\PembelianBahanBaku;
@@ -19,6 +18,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
 use Filament\Forms\Set;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Columns\TextColumn;
@@ -86,6 +86,9 @@ class LaporanKeuanganResource extends Resource
                                     ->prefix('Rp')
                                     ->numeric()
                                     ->readOnly()
+                                    ->live()
+                                    ->disabled()
+                                    ->dehydrated(true)
                                     ->extraInputAttributes(['class' => 'text-success-600 font-bold text-xl']),
                             ]),
 
@@ -99,6 +102,7 @@ class LaporanKeuanganResource extends Resource
                                         ->numeric()
                                         ->readOnly()
                                         ->live()
+                                        ->disabled()
                                         ->dehydrated(true),
 
                                     TextInput::make('biaya_sdm')
@@ -107,6 +111,7 @@ class LaporanKeuanganResource extends Resource
                                         ->numeric()
                                         ->readOnly()
                                         ->live()
+                                        ->disabled()
                                         ->dehydrated(true)
                                 ]),
 
@@ -115,6 +120,8 @@ class LaporanKeuanganResource extends Resource
                                     ->prefix('Rp')
                                     ->numeric()
                                     ->readOnly()
+                                    ->live()
+                                    ->disabled()
                                     ->dehydrated()
                                     ->extraInputAttributes(['class' => 'text-danger-600 font-bold text-xl']),
                             ]),
@@ -178,6 +185,30 @@ class LaporanKeuanganResource extends Resource
             ->actions([
                 EditAction::make()->label('Detail'),
                 DeleteAction::make(),
+                Action::make('hitung_ulang_tabel')
+                    ->label('Hitung Otomatis')
+                    ->icon('heroicon-o-calculator')
+                    ->color('info')
+                    ->requiresConfirmation()
+                    ->modalHeading('Hitung Ulang Laporan')
+                    ->modalDescription('Apakah kamu yakin ingin menarik ulang data transaksi terbaru untuk periode ini?')
+                    ->action(function (LaporanKeuangan $record) {
+                        $data = self::kalkulasiDataPeriode($record->periode_laporan);
+
+                        if (!empty($data)) {
+                            $record->update([
+                                'total_pendapatan'  => $data['pendapatan'],
+                                'total_pengeluaran' => $data['totalPengeluaran'],
+                                'laba_rugi'         => $data['labaBersih'],
+                            ]);
+
+                            Notification::make()
+                                ->title('Berhasil')
+                                ->body('Data laporan keuangan telah diperbarui dengan transaksi terbaru.')
+                                ->success()
+                                ->send();
+                        }
+                    }),
                 Action::make('cetak_pdf')
                     ->label('Download PDF')
                     ->icon('heroicon-o-document-arrow-down')
@@ -189,11 +220,9 @@ class LaporanKeuanganResource extends Resource
             ]);
     }
 
-    public static function hitungOtomatis(Get $get, Set $set)
+    public static function kalkulasiDataPeriode($dateInput): array
     {
-        $dateInput = $get('periode_laporan');
-
-        if (! $dateInput) return;
+        if (! $dateInput) return [];
 
         $start = Carbon::parse($dateInput)->startOfMonth();
         $end   = Carbon::parse($dateInput)->endOfMonth();
@@ -216,12 +245,29 @@ class LaporanKeuanganResource extends Resource
         $totalPengeluaran = $costBahan + $costUpah;
         $labaBersih = $pendapatan - $totalPengeluaran;
 
-        $set('total_pendapatan', $pendapatan);
-        $set('detail_penjualan_count', $countTransaksi);
-        $set('biaya_material', $costBahan);
-        $set('biaya_sdm', $costUpah);
-        $set('total_pengeluaran', $totalPengeluaran);
-        $set('laba_rugi', $labaBersih);
+        return [
+            'pendapatan' => $pendapatan,
+            'countTransaksi' => $countTransaksi,
+            'costBahan' => $costBahan,
+            'costUpah' => $costUpah,
+            'totalPengeluaran' => $totalPengeluaran,
+            'labaBersih' => $labaBersih,
+        ];
+    }
+
+    public static function hitungOtomatis(Get $get, Set $set)
+    {
+        $dateInput = $get('periode_laporan');
+        $data = self::kalkulasiDataPeriode($dateInput);
+
+        if (empty($data)) return;
+
+        $set('total_pendapatan', $data['pendapatan']);
+        $set('detail_penjualan_count', $data['countTransaksi']);
+        $set('biaya_material', $data['costBahan']);
+        $set('biaya_sdm', $data['costUpah']);
+        $set('total_pengeluaran', $data['totalPengeluaran']);
+        $set('laba_rugi', $data['labaBersih']);
     }
 
     public static function getPages(): array

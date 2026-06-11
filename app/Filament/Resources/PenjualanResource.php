@@ -28,6 +28,7 @@ use Filament\Tables\Actions\ExportBulkAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\Builder;
 
 class PenjualanResource extends Resource
 {
@@ -173,9 +174,14 @@ class PenjualanResource extends Resource
 
                                 Select::make('id_tim_keuangan')
                                     ->label('Kasir Bertugas')
-                                    ->relationship('timKeuangan', 'nama_pegawai')
-                                    ->default(Auth::id())
-                                    ->dehydrated(),
+                                    ->relationship(
+                                        name: 'timKeuangan',
+                                        titleAttribute: 'nama_pegawai',
+                                        modifyQueryUsing: fn(Builder $query) => $query->where('jabatan', 'Kasir')
+                                    )
+                                    ->default(fn() => Auth::user()->infoKeuangan?->id)
+                                    ->dehydrated()
+                                    ->required(),
 
                                 Select::make('status_pembayaran')
                                     ->options([
@@ -196,10 +202,7 @@ class PenjualanResource extends Resource
                                     ->required(),
 
                                 Textarea::make('catatan')
-                                    ->label('Catatan Tambahan')
-                                    ->rows(3)
-                                    ->maxLength(500)
-                                    ->placeholder('Masukkan catatan tambahan untuk transaksi ini...'),
+                                    ->hidden()
 
                             ]),
                     ])->columnSpan(['lg' => 1]),
@@ -228,6 +231,10 @@ class PenjualanResource extends Resource
                         'belum_terverifikasi' => 'warning',
                         'ditolak' => 'danger',
                     }),
+                TextColumn::make('catatan')
+                    ->limit(50)
+                    ->wrap()
+                    ->tooltip(fn(Penjualan $record) => $record->catatan)
             ])
             ->defaultSort('created_at', 'desc')
             ->actions([

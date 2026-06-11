@@ -32,11 +32,6 @@
                                     'status' => $penjualan->status_pembayaran == 'lunas',
                                 ],
                                 [
-                                    'icon' => 'fa-hammer',
-                                    'label' => 'Produksi',
-                                    'status' => $penjualan->status_verifikasi == 'terverifikasi',
-                                ],
-                                [
                                     'icon' => 'fa-truck-fast',
                                     'label' => 'Selesai',
                                     'status' =>

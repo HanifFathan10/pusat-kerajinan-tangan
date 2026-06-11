@@ -36,7 +36,7 @@
     <div>
         <label class="block text-[10px] font-bold uppercase tracking-widest mb-3 text-stone-400">Catatan
             Tambahan</label>
-        <textarea name="catatan" rows="3"
+        <textarea name="catatan" rows="3" maxlength="50"
             class="w-full bg-clay/10 border-b-2 border-stone-200 py-3 focus:border-copper-accent outline-none transition text-sm font-medium resize-none"
             placeholder="Catatan tambahan untuk pesanan Anda..."></textarea>
     </div>
